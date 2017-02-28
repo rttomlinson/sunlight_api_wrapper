@@ -44,12 +44,25 @@ class SunlightAPIWrapper {
     
     cleanRepContactInfo(data) {
         let cleanedData = {};
-        cleanedData["fullName"] = data.results[0].aliases[0];
-        cleanedData["contactForm"] = data.results[0].contact_form;
-        cleanedData["party"] = data.results[0].party;
-        cleanedData["title"] = data.results[0].title;
-        cleanedData["website"] = data.results[0].website;
-        cleanedData["phone"] = data.results[0].phone;
+        let rep = data.results[0];
+        cleanedData["fullName"] = rep.aliases[0];
+        cleanedData["contactForm"] = rep.contact_form;
+        if (rep.party == "R") {
+            cleanedData.party = "Republican";
+        } else if (rep.party == "D") {
+            cleanedData.party = "Democrat";
+        } else {
+            cleanedData.party = rep.party;
+        }
+        if (rep.title == "Rep") {
+            cleanedData.title = "Representative";
+        } else if (rep.title == "Sen") {
+            cleanedData.title = "Senator";
+        } else {
+            cleanedData.title = rep.title;
+        }
+        cleanedData["website"] = rep.website;
+        cleanedData["phone"] = rep.phone;
         return cleanedData;
     
     }
