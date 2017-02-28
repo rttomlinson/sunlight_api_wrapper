@@ -28,7 +28,7 @@ class SunlightAPIWrapper {
         options.qs["fields"] = `voter_ids.${bioguide_id},voted_at,bill.bill_id,bill.official_title`; //returns, bioguide_ids vote, vote time, bill id, and bill official title
         options.qs[`voter_ids.${bioguide_id}__exists`] = "true"; //check that this rep voted
         options.qs["order"] = "voted_at__desc"; //order votes chronologically
-        options.qs["bill_id__exists"] = "true"; //check that this vote is regarding a bill
+        options.qs["bill.bill_id__exists"] = "true"; //check that this vote is regarding a bill
         return customRequest(options);
         
     }
