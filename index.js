@@ -92,7 +92,7 @@ class SunlightAPIWrapper {
             let holderObj = {};
             holderObj["bill_id"] = element.bill.bill_id;//billid from element
             holderObj["bill_title"] = element.bill.official_title;
-            holderObj["recorded-vote"] = element.voter_ids[Object.getOwnPropertyNames(element.voter_ids)[0]];
+            holderObj["recorded_vote"] = element.voter_ids[Object.getOwnPropertyNames(element.voter_ids)[0]];
             cleanedData.push(holderObj);
         });
         return cleanedData;

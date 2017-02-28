@@ -9,7 +9,7 @@ let sunlight  = new Sunlight();
 
 console.log("Yay file called! Something is messed up though");
 console.log(sunlight);
-
+/*
 let repsByZip = sunlight.getRepsByZipcode(75074); //method falls return promises
 
 repsByZip.then(function onFulfill(data) { //expect data to be a JS object
@@ -19,7 +19,7 @@ repsByZip.then(function onFulfill(data) { //expect data to be a JS object
     console.log(error);
 });
 
-
+*/
 
 /* ------------- repVote calls ----------------------------------*/
 
@@ -34,7 +34,7 @@ repsVotes.then(function onFulfill(data) {
 });
 
 /*  -------------------------repInfo calls ------------------------*/
-
+/*
 let repInfo = sunlight.getRepContactInfo("J000174");
 
 repInfo.then(function onFulfill(data) {
@@ -42,7 +42,7 @@ repInfo.then(function onFulfill(data) {
 }).catch(function onError(error) {
     console.log(error);
 });
-
+*/
 
 /* ----------------------- DATA INFO ------------------------------ */
 
