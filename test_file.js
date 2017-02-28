@@ -7,23 +7,13 @@ let sunlight  = new Sunlight();
 
 /* ------------------------------------- Get Reps by Zipcode ------------------------------- */
 
+console.log("Yay file called! Something is messed up though");
+console.log(sunlight);
 
 let repsByZip = sunlight.getRepsByZipcode(75074); //method falls return promises
 
 repsByZip.then(function onFulfill(data) { //expect data to be a JS object
-    console.log(data);
-    let prettyData = {
-        "senate" : [],
-        "house" : []
-    };
-    data.results.forEach(function (element, index, arr) {
-        let cleanedData = cleanRepData(element);
-        if (element.chamber == "senate") {
-            prettyData.senate.push(cleanedData);
-        } else {
-            prettyData.house.push(cleanedData);
-        }
-    });
+    let prettyData = sunlight.cleanRepsByZipcodeData(data);
     console.log(prettyData);
 }).catch(function onError(error) {
     console.log(error);
@@ -37,7 +27,7 @@ repsByZip.then(function onFulfill(data) { //expect data to be a JS object
 let repsVotes = sunlight.getMostRecentVotes("J000174");
 
 repsVotes.then(function onFulfill(data) {
-    console.log(cleanVoteData(data));
+    console.log(sunlight.cleanVoteData(data));
 
 }).catch(function onError(error) {
     console.log(error);
@@ -45,10 +35,10 @@ repsVotes.then(function onFulfill(data) {
 
 /*  -------------------------repInfo calls ------------------------*/
 
-let repInfo = sunlight.getRepInfo("J000174");
+let repInfo = sunlight.getRepContactInfo("J000174");
 
 repInfo.then(function onFulfill(data) {
-    console.log(cleanRepContactInfo(data));
+    console.log(sunlight.cleanRepContactInfo(data));
 }).catch(function onError(error) {
     console.log(error);
 });
@@ -79,17 +69,6 @@ repInfo.then(function onFulfill(data) {
     ]
 }
 */
-function cleanRepData(rep) {
-    let cleanData = {};
-    cleanData.fullName = rep.aliases[0];
-    cleanData.party = rep.party;
-    cleanData.bioguideId = rep.bioguide_id;
-    if (rep.chamber == "house") {
-        cleanData.district = rep.district;
-    }
-    return cleanData;
-}
-
 
 /*---------------------------------Voting Records ------------------------------*/
 
@@ -190,11 +169,11 @@ Form expected from API call
 
 function cleanRepContactInfo(data) {
     let cleanedData = {};
-    cleanedData["fullName"] = data.results.aliases[0];
-    cleanedData["contactForm"] = data.results.contact_form;
-    cleanedData["party"] = data.results.party;
-    cleanedData["title"] = data.results.title;
-    cleanedData["website"] = data.results.website;
+    cleanedData["fullName"] = data.results[0].aliases[0];
+    cleanedData["contactForm"] = data.results[0].contact_form;
+    cleanedData["party"] = data.results[0].party;
+    cleanedData["title"] = data.results[0].title;
+    cleanedData["website"] = data.results[0].website;
     return cleanedData;
     
 }

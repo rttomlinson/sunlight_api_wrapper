@@ -32,14 +32,58 @@ class SunlightAPIWrapper {
         return customRequest(options);
         
     }
-    getRepInfo(bioguide_id) {
+    getRepContactInfo(bioguide_id) {
         let options = {};
         options.qs = {};
         options["uri"] = `${this.baseUrl}legislators/`;
-        options.qs["fields"] = `party,title,aliases[0],phone,website,contact_form`; //returns, bioguide_ids vote, vote time, bill id, and bill official title
+        options.qs["bioguide_id"] = `${bioguide_id}`;
+        options.qs["fields"] = `party,title,aliases,phone,website,contact_form`; //returns, bioguide_ids vote, vote time, bill id, and bill official title
         return customRequest(options);
         
     }
+    
+    cleanRepContactInfo(data) {
+        let cleanedData = {};
+        cleanedData["fullName"] = data.results[0].aliases[0];
+        cleanedData["contactForm"] = data.results[0].contact_form;
+        cleanedData["party"] = data.results[0].party;
+        cleanedData["title"] = data.results[0].title;
+        cleanedData["website"] = data.results[0].website;
+        return cleanedData;
+    
+    }
+    cleanRepsByZipcodeData(data) {
+        let cleanedData = {
+            "senate" : [],
+            "house" : []
+        };
+        data.results.forEach(function (element, index, arr) { //for each representative object returned
+            let next = {};
+            next.fullName = element.aliases[0];
+            next.party = element.party;
+            next.bioguideId = element.bioguide_id;
+            if (element.chamber == "house") {
+                next.district = element.district;
+                cleanedData.house.push(next);
+            } else {
+                cleanedData.senate.push(next);
+            }
+        });
+    
+        return cleanedData;
+    }
+    cleanVoteData(data) {
+        let cleanedData = [];
+        data.results.forEach(function (element, index, arr) {
+            let holderObj = {};
+            holderObj["bill_id"] = element.bill.bill_id;//billid from element
+            holderObj["bill_title"] = element.bill.official_title;
+            holderObj["recorded-vote"] = element.voter_ids[Object.getOwnPropertyNames(element.voter_ids)[0]];
+            cleanedData.push(holderObj);
+        });
+        return cleanedData;
+    }
+    
 }
 
 /*This uses the special callback for request module http calls*/
@@ -68,4 +112,110 @@ function wrapRequestWithPromise(fn) {
 }
 
 module.exports = SunlightAPIWrapper;
+
+
+
+/* ----------------------- DATA INFO ------------------------------ */
+/*FOR FUNCTION cleanRepsByZipcodeData*/
+
+
+/*Pretty data for reps by zipcode should follow the schema of:
+{
+    "house" : [
+        {
+            "fullName" : [string],
+            "party" : [string],
+            "bioguideId : [string],
+            "district" : [number]
+        },...
+    ],
+    "senate" : [
+        {
+            "fullName" : [string],
+            "party" : [string],
+            "bioguideId : [string],
+        }
+    
+    
+    
+    ]
+}
+*/
+
+/*---------------------------------Voting Records ------------------------------*/
+/* FOR function cleanVoteData*/
+
+/* -------------------------------Raw Data -----------------------------*/
+/*
+{
+    "results" : [
+        {
+            "bill": {
+                "bill_id" : [string],
+                "official_title" : [string]
+            },
+            "voted_at" : [string],
+            "voter_ids" : {
+                "[bioguide_id]" : [string]
+            }
+        },...
+        
+    
+    
+    
+    ],
+    "count" : [number],
+    "page" : [Object]
+}
+
+
+*/
+/*
+Pretty data for voting records
+
+[
+    {
+        "bill_id" : [string],
+        "bill_title" : [string],
+        "recorded-vote": [string]
+    },...
+]
+*/
+
+
+/*--------------------------Clean Rep Data----------------------------*/
+/* FOR FUNCTION cleanRepContactInfo */
+/* Clean form should follow this schema
+
+{
+    "fullName" : [string],
+    "phoneNumber" : [string],
+    "email" : [string],
+    "seat" : [string],
+    "party" : [string],
+    "contactForm" : [string]
+}
+
+
+Form expected from API call
+
+{
+    "results" : [ {
+            "aliases" : [Array],
+            "contact_form" : [string] or null,
+            "party" : [string],
+            "phone" : [string],
+            "title" : [string],
+            "website" : [string]
+        },
+    
+    ],
+    "count": [number],
+    "page": [Object]
+}
+
+
+*/
+
+
 
