@@ -32,9 +32,15 @@ class SunlightAPIWrapper {
         return customRequest(options);
         
     }
+    getRepInfo(bioguide_id) {
+        let options = {};
+        options.qs = {};
+        options["uri"] = `${this.baseUrl}legislators/`;
+        options.qs["fields"] = `party,title,aliases[0],phone,website,contact_form`; //returns, bioguide_ids vote, vote time, bill id, and bill official title
+        return customRequest(options);
+        
+    }
 }
-
-module.exports = SunlightAPIWrapper;
 
 /*This uses the special callback for request module http calls*/
 
@@ -60,3 +66,6 @@ function wrapRequestWithPromise(fn) {
         });
     };
 }
+
+module.exports = SunlightAPIWrapper;
+

@@ -43,8 +43,15 @@ repsVotes.then(function onFulfill(data) {
     console.log(error);
 });
 
+/*  -------------------------repInfo calls ------------------------*/
 
+let repInfo = sunlight.getRepInfo("J000174");
 
+repInfo.then(function onFulfill(data) {
+    console.log(cleanRepContactInfo(data));
+}).catch(function onError(error) {
+    console.log(error);
+});
 
 
 /* ----------------------- DATA INFO ------------------------------ */
@@ -143,6 +150,53 @@ function cleanVoteData(data) {
         cleanedData.push(holderObj);
     });
     return cleanedData;
+}
+
+
+
+
+/*--------------------------Clean Rep Data----------------------------*/
+/* Clean form should follow this schema
+
+{
+    "fullName" : [string],
+    "phoneNumber" : [string],
+    "email" : [string],
+    "seat" : [string],
+    "party" : [string],
+    "contactForm" : [string]
+}
+
+
+Form expected from API call
+
+{
+    "results" : [ {
+            "aliases" : [Array],
+            "contact_form" : [string] or null,
+            "party" : [string],
+            "phone" : [string],
+            "title" : [string],
+            "website" : [string]
+        },
+    
+    ],
+    "count": [number],
+    "page": [Object]
+}
+
+
+*/
+
+function cleanRepContactInfo(data) {
+    let cleanedData = {};
+    cleanedData["fullName"] = data.results.aliases[0];
+    cleanedData["contactForm"] = data.results.contact_form;
+    cleanedData["party"] = data.results.party;
+    cleanedData["title"] = data.results.title;
+    cleanedData["website"] = data.results.website;
+    return cleanedData;
+    
 }
 
 
