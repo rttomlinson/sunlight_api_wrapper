@@ -49,6 +49,7 @@ class SunlightAPIWrapper {
         cleanedData["party"] = data.results[0].party;
         cleanedData["title"] = data.results[0].title;
         cleanedData["website"] = data.results[0].website;
+        cleanedData["phone"] = data.results[0].phone;
         return cleanedData;
     
     }
