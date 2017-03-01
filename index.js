@@ -25,7 +25,7 @@ class SunlightAPIWrapper {
         let options = {};
         options.qs = {};
         options["uri"] = `${this.baseUrl}votes/`;
-        options.qs["fields"] = `voter_ids.${bioguide_id},voted_at,bill.bill_id,bill.official_title`; //returns, bioguide_ids vote, vote time, bill id, and bill official title
+        options.qs["fields"] = `voter_ids.${bioguide_id},voted_at,bill.bill_id,bill.official_title,bill.urls.congress`; //returns, bioguide_ids vote, vote time, bill id, and bill official title
         options.qs[`voter_ids.${bioguide_id}__exists`] = "true"; //check that this rep voted
         options.qs["order"] = "voted_at__desc"; //order votes chronologically
         options.qs["bill.bill_id__exists"] = "true"; //check that this vote is regarding a bill
@@ -93,6 +93,7 @@ class SunlightAPIWrapper {
             holderObj["bill_id"] = element.bill.bill_id;//billid from element
             holderObj["bill_title"] = element.bill.official_title;
             holderObj["recorded_vote"] = element.voter_ids[Object.getOwnPropertyNames(element.voter_ids)[0]];
+            holderObj["bill_website"] = element.bill.urls.congress;
             cleanedData.push(holderObj);
         });
         return cleanedData;
