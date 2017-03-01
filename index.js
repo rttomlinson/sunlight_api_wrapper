@@ -74,7 +74,13 @@ class SunlightAPIWrapper {
         data.results.forEach(function (element, index, arr) { //for each representative object returned
             let next = {};
             next.fullName = element.aliases[0];
-            next.party = element.party;
+            if (element.party == "R") {
+                next.party = "Republican";
+            } else if (element.party == "D") {
+                next.party = "Democrat";
+            } else {
+                next.party = element.party;
+            }
             next.bioguideId = element.bioguide_id;
             if (element.chamber == "house") {
                 next.district = element.district;
